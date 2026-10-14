@@ -41,12 +41,13 @@ diff .dsh-cache/<前の版>/node_modules/@deepseek-ai/dsh-client-locale/lib/type
 
 - `en`：新しい英語原文
 - `previousEn`：英語が変わったキーのみ、前の英語原文
+- `olderEn`：古い対応版で英語がない・違うキーのみ、その版の英語原文（`sources/older.json`）
 - `currentJa`：既存の訳がある場合のみ
 
 進め方:
 
 1. `docs/translation-guide.md` の用語集と文体に従う。ボタンや見出しは短く句点なし、説明やエラーは「です・ます」。`{name}` などの置換は名前も個数もそのまま保つ。
-2. 迷うキーは、`sources/en.json` の `packages[名前空間]` で所属パッケージを特定する。`.dsh-cache/<版>/node_modules/@deepseek-ai/<パッケージ>/lib/client.js` で、そのキーの使われ方と中国語（`zh`）の訳を確認する。
+2. 迷うキーは、`sources/en.json` の `packages[名前空間]` で所属パッケージを特定する。`.dsh-cache/<版>/node_modules/@deepseek-ai/<パッケージ>/lib/` の下（多くは `client.js`）で、そのキーの使われ方と中国語（`zh`）の訳を確認する。
 3. `previousEn` があるキーは英語の変化を読み、`currentJa` を直す必要があるかを判断する。直す必要がなければ `currentJa` をそのまま出力に含めてよい。
 4. `olderEn` があるキーは、古い対応版ではその英語が表示される場所に同じ訳が出る。`en` と `olderEn` のどちらの意味にも合う言い回しにする（片方でしか正しくない説明文にしない）。置換の名前は全版で一致していなければ取り込めない。
 5. 結果を `{ "名前空間": { "キー": "訳" } }` の形で `.dsh-cache/translations-<版>.json` に書き、取り込む。
