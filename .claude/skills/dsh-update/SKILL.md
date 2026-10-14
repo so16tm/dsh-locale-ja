@@ -65,12 +65,14 @@ pnpm add -D --save-exact @deepseek-ai/dsh-client-locale@<版>
 - 前の版の利用者を残す（例：新版が alpha で、latest はまだ前の版）なら、手順1を `pnpm sync <版> --keep-stale` で実行する。新版で消えたキーの訳が残り、`sources/older-keys.json` に記録される。`peerDependencies["@deepseek-ai/dsh-client-locale"]` は `前の版 || <版>` のように、検証した版を `||` で列挙する。
 - 前の版の対応をやめるときは `--keep-stale` なしで sync し、peer を `<版>` だけにする。
 - DSH は peer の範囲外の版で、プラグインを互換性なしとして扱う（`dsh plugin allow-version` で許可が必要）。範囲には実際に確認した版だけを書く。
-- README の「対応バージョン」も同じ版に更新する。
+- 版を上げる。`package.json` の `version` のマイナー版を上げ（`0.1.0` → `0.2.0`）、`CHANGELOG.md` の先頭に `## v<新しい版>` の節を追加する。節には `対応 DSH:` の行と主な変更点を書く。
+- README の対応表に新しい版の行を追加し、インストール例のタグも新しい版にする。
+- タグは自分で付けない。PR のマージ後に CI が `v<版>` のタグとリリースを作成する。
 - `pnpm check` を実行し、生成された `lib/` もコミットする（リポジトリから直接インストールされるため。CI が一致を検査する）。テストは新しい版の実際の `LocaleRuntime` で、登録・切替・解除を確認する。
 
 ## 5. PR
 
-- ブランチ名は `update/dsh-<版>`、ベースは `main`。
+- ブランチ名は `update/dsh-<版>`、ベースは `main`。PR のタイトルにプラグインの新しい版を含める。
 - PR の本文に次を書く。
   - 版の移行（前 → 後）
   - 英語原文の追加・変更・削除の件数と翻訳率

@@ -1,6 +1,6 @@
 {
   "name": "@so16tm/dsh-locale-ja",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Japanese (日本語) UI language pack for DeepSeek Harness, built only on the public locale API.",
   "type": "module",
   "license": "MIT",
@@ -42,7 +42,8 @@
     "README.md",
     "LICENSE",
     "THIRD_PARTY_NOTICES.md",
-    "licenses"
+    "licenses",
+    "CHANGELOG.md"
   ],
   "engines": {
     "node": ">=22"
@@ -80,7 +81,7 @@
     "build": "node scripts/build.mjs",
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/*.test.mjs",
-    "check": "pnpm typecheck && pnpm build && pnpm test && pnpm coverage",
+    "check": "pnpm typecheck && pnpm build && pnpm test && pnpm coverage && node scripts/release-notes.mjs >/dev/null",
     "sync": "node scripts/sync.mjs",
     "apply": "node scripts/apply.mjs",
     "coverage": "node scripts/coverage.mjs"
