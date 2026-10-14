@@ -16,7 +16,8 @@ pnpm sync <版>
 ```
 
 - npm から `@deepseek-ai/dsh@<版>` をスクリプト無効で `.dsh-cache/<版>/` に取得し、`sources/en.json` を書き換える。
-- 本体から消えたキーは `translations/ja.json` から自動で除かれる。
+- 前の版は対応版として残る。前の版にしかないキーや英語が違うキーは、その英語とともに `sources/older.json` に記録され、訳も残る。
+- 古い版の対応をやめるとき（peer の下限を上げるとき）だけ `pnpm sync <版> --drop-older` を使う。記録と、新しい版で消えたキーの訳が消える。
 - 抽出が `Could not extract` で失敗したら、上流の登録形式が変わっている。`scripts/lib/extract.mjs` を直し、その版の英語辞書を漏れなく読めるようになるまで先へ進まない。
 - 出力の件数（追加・変更・削除・未訳）を控えておく。PR の本文に使う。
 
@@ -31,7 +32,7 @@ diff .dsh-cache/<前の版>/node_modules/@deepseek-ai/dsh-client-locale/lib/type
 
 - 使っているのは `register` / `addLanguage` / `getLocale` / `subscribe` だけ（`src/types.ts`）。このいずれかのシグネチャか意味が変わっていたら、翻訳に入る前に止めてユーザーに報告する。
 - 応答言語の指示（`src/index.ts`）が使う公開面を確認する。`@deepseek-ai/dsh-system-prompt` の `section()`、`@deepseek-ai/dsh-settings` の `describe()`、`dsh-client-locale/lib/index.js` の設定名（`locale` / `preference`）の差分を見て、変わっていたら直す。devDependencies のこの2つも新しい版に揃える。
-- フォントのトークン名（`--dsw-font-family`、`--ds-font-family-code`）が新しい版の CSS に残っているかを `grep -r` で確認する。消えていたら `src/font.ts` を直す。
+- フォントのトークン（`--dsh-font-family-text-default`、`--dsh-font-family-code-default`、`--dsw-font-family`、`--ds-font-family-code`）が、新しい版の `dsh-client-ui-theme` の CSS でどのセレクターにどう定義されているかを確認する。名前が残っているかだけでなく、利用者のフォント設定（body の `--dsh-font-family-text` など）がどこで合流するかを見る。変わっていたら `src/font.ts` を直す。プラグインが上書きしてよいのは本体の既定の書体スタックだけで、利用者の設定より優先してはいけない。
 - client manifest（`dsh.client`・`dsh.bundle.patch`）の仕様が変わっていないかを、`dsh-client-modules` と `dsh-plugin-manager` の差分で確認する。
 
 ## 3. 翻訳
@@ -47,7 +48,8 @@ diff .dsh-cache/<前の版>/node_modules/@deepseek-ai/dsh-client-locale/lib/type
 1. `docs/translation-guide.md` の用語集と文体に従う。ボタンや見出しは短く句点なし、説明やエラーは「です・ます」。`{name}` などの置換は名前も個数もそのまま保つ。
 2. 迷うキーは、`sources/en.json` の `packages[名前空間]` で所属パッケージを特定する。`.dsh-cache/<版>/node_modules/@deepseek-ai/<パッケージ>/lib/client.js` で、そのキーの使われ方と中国語（`zh`）の訳を確認する。
 3. `previousEn` があるキーは英語の変化を読み、`currentJa` を直す必要があるかを判断する。直す必要がなければ `currentJa` をそのまま出力に含めてよい。
-4. 結果を `{ "名前空間": { "キー": "訳" } }` の形で `.dsh-cache/translations-<版>.json` に書き、取り込む。
+4. `olderEn` があるキーは、古い対応版ではその英語が表示される場所に同じ訳が出る。`en` と `olderEn` のどちらの意味にも合う言い回しにする（片方でしか正しくない説明文にしない）。置換の名前は全版で一致していなければ取り込めない。
+5. 結果を `{ "名前空間": { "キー": "訳" } }` の形で `.dsh-cache/translations-<版>.json` に書き、取り込む。
 
 ```bash
 pnpm apply .dsh-cache/translations-<版>.json
@@ -62,13 +64,12 @@ pnpm coverage --strict
 pnpm add -D --save-exact @deepseek-ai/dsh-client-locale@<版>
 ```
 
-- 前の版の利用者を残す（例：新版が alpha で、latest はまだ前の版）なら、手順1を `pnpm sync <版> --keep-stale` で実行する。新版で消えたキーの訳が残り、`sources/older-keys.json` に記録される。`peerDependencies["@deepseek-ai/dsh-client-locale"]` は `前の版 || <版>` のように、検証した版を `||` で列挙する。
-- 前の版の対応をやめるときは `--keep-stale` なしで sync し、peer を `<版>` だけにする。
-- DSH は peer の範囲外の版で、プラグインを互換性なしとして扱う（`dsh plugin allow-version` で許可が必要）。範囲には実際に確認した版だけを書く。
+- `peerDependencies["@deepseek-ai/dsh-client-locale"]` は範囲で書く（例：`>=0.2.0-rc.2 <0.3.0-0`）。DSH は prerelease も含めてこの範囲で判定し、範囲外の版ではプラグインを起動時に読み込まない。新しい版が範囲内なら peer は変えない。次のマイナー版（`0.3.x`）に追従するときは上限を上げる。古い版の対応をやめるときは下限を上げ、`--drop-older` で sync する。
+- テスト用の `dsh-client-locale-oldest`（npm エイリアス）は peer の下限の版にする。下限を上げたら `pnpm add -D dsh-client-locale-oldest@npm:@deepseek-ai/dsh-client-locale@<下限>` で揃える。
 - 版を上げる。`package.json` の `version` のマイナー版を上げ（`0.1.0` → `0.2.0`）、`CHANGELOG.md` の先頭に `## v<新しい版>` の節を追加する。節には `対応 DSH:` の行と主な変更点を書く。
 - README の対応表に新しい版の行を追加し、インストール例のタグも新しい版にする。
 - タグは自分で付けない。PR のマージ後に CI が `v<版>` のタグとリリースを作成する。
-- `pnpm check` を実行し、生成された `lib/` もコミットする（リポジトリから直接インストールされるため。CI が一致を検査する）。テストは新しい版の実際の `LocaleRuntime` で、登録・切替・解除を確認する。
+- `pnpm check` を実行し、生成された `lib/` もコミットする（リポジトリから直接インストールされるため。CI が一致を検査する）。テストは最も新しい版と最も古い版の実際の `LocaleRuntime` で、登録・切替・解除を確認する。
 
 ## 5. PR
 

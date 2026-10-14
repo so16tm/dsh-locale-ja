@@ -1,7 +1,8 @@
 // pnpm apply <file.json>
 // Merge reviewed translations ({ namespace: { key: "日本語" } }) into
-// translations/ja.json, rejecting unknown keys and placeholder mismatches.
-import { readFileSync, writeFileSync } from 'node:fs';
+// translations/ja.json, rejecting unknown keys and placeholder mismatches
+// against the baseline and every older supported version (sources/older.json).
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { audit } from './lib/audit.mjs';
 import { sortKeys } from './lib/extract.mjs';
 
@@ -9,7 +10,8 @@ const file = process.argv[2];
 if (!file) throw new Error('Usage: pnpm apply <translations.json>');
 const english = JSON.parse(readFileSync('sources/en.json', 'utf8')).dictionaries;
 const incoming = JSON.parse(readFileSync(file, 'utf8'));
-const check = audit(english, incoming);
+const older = existsSync('sources/older.json') ? JSON.parse(readFileSync('sources/older.json', 'utf8')).dictionaries : {};
+const check = audit(english, incoming, [], older);
 if (check.stale.length || check.invalid.length) {
   console.error('Rejected. Unknown keys:', check.stale, 'Empty or placeholder mismatch:', check.invalid);
   process.exit(1);

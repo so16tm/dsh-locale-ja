@@ -2,7 +2,7 @@ import type { Context } from '@deepseek-ai/cordis';
 import type {} from '@deepseek-ai/dsh-system-prompt';
 import type { SettingsDescriptor } from '@deepseek-ai/dsh-settings';
 
-/** Prompt section that keeps the agent's replies in the UI language. */
+/** Prompt section that keeps the agent's replies in Japanese while Japanese is selected. */
 export const REPLY_LANGUAGE_SECTION = 'so16tm-locale-ja:reply-language';
 
 // The default prompt names no reply language, so the model drifts toward whatever the
@@ -12,11 +12,8 @@ const REPLY_LANGUAGE_ORDER = 10150;
 // dsh-client-locale keeps an explicit UI language choice in its own settings entry.
 const LOCALE_SETTINGS_NAMESPACE = 'locale';
 
-/** Used when the UI language is left to the browser, which the Host cannot see. */
-const DEFAULT_LANGUAGE = 'ja';
-
 export interface Config {
-  /** Ask the agent to reply in the UI language chosen in Settings. Defaults to true. */
+  /** Ask the agent to reply in Japanese while Japanese is chosen in Settings. Defaults to true. */
   replyInUiLanguage?: boolean;
 }
 
@@ -33,25 +30,26 @@ export function selectedLanguage(settings: SettingsReader | undefined): string |
   }
 }
 
-/** English instruction naming the reply language, e.g. `ja` -> Japanese. */
-export function replyInstruction(id: string): string {
-  let language = id;
-  try {
-    language = new Intl.DisplayNames(['en'], { type: 'language' }).of(id) ?? id;
-  } catch {}
-  return [
-    `Always write your messages to the user in ${language}: progress updates, plans, questions, explanations, and final summaries.`,
-    `Keep replying in ${language} even when tool output, files, error messages, or earlier turns are in another language.`,
-    'Use another language only when the user explicitly asks for it.',
-    'Leave code, commands, file paths, identifiers, log excerpts, and quoted text in their original form.',
-  ].join(' ');
+/** English instruction that keeps the agent's messages in Japanese. */
+export const REPLY_INSTRUCTION = [
+  'Always write your messages to the user in Japanese: progress updates, plans, questions, explanations, and final summaries.',
+  'Keep replying in Japanese even when tool output, files, error messages, or earlier turns are in another language.',
+  'Use another language only when the user explicitly asks for it.',
+  'Leave code, commands, file paths, identifiers, log excerpts, and quoted text in their original form.',
+].join(' ');
+
+/** Whether Settings → General → Language holds an explicit Japanese choice. */
+export function japaneseSelected(settings: SettingsReader | undefined): boolean {
+  return selectedLanguage(settings)?.toLowerCase().split('-')[0] === 'ja';
 }
 
 /**
  * Host half. The client module is mounted through cordis.patch.yml; here the plugin only
  * adds the reply-language section once the prompt registry exists, so profiles without
- * one still load the language pack. The language is read on every prompt assembly, so a
- * change in Settings applies from the next model step.
+ * one still load the language pack. The section speaks only for this pack's own language:
+ * it is empty (and so absent) unless Japanese was chosen explicitly. A choice left to the
+ * browser is invisible to the Host, and other languages keep DSH's default behavior.
+ * The choice is read on every prompt assembly, so a change applies from the next model step.
  */
 export function apply(ctx: Context, config: Config | undefined): void {
   if (config?.replyInUiLanguage === false) return;
@@ -59,7 +57,7 @@ export function apply(ctx: Context, config: Config | undefined): void {
     ctx.systemPrompt.section({
       name: REPLY_LANGUAGE_SECTION,
       order: REPLY_LANGUAGE_ORDER,
-      text: () => replyInstruction(selectedLanguage(ctx.get('settings')) ?? DEFAULT_LANGUAGE),
+      text: () => (japaneseSelected(ctx.get('settings')) ? REPLY_INSTRUCTION : ''),
       interpolate: false,
     });
   });

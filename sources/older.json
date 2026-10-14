@@ -1,0 +1,41 @@
+{
+  "versions": [
+    "0.2.0-rc.2"
+  ],
+  "dictionaries": {
+    "conversation": {
+      "tool.preparing.content": [
+        "Preparing content {kilobytes}KB"
+      ]
+    },
+    "pluginManager": {
+      "installUpgradeNotice": [
+        "Installed plugins do not update automatically yet. To upgrade a plugin, uninstall it and install the new version. Later releases will keep improving the upgrade experience."
+      ]
+    },
+    "schedule.manager": {
+      "detail.records": [
+        "Delivery records"
+      ]
+    },
+    "settings.theme": {
+      "fontSize.decrease": [
+        "Decrease font size"
+      ],
+      "fontSize.description": [
+        "Only affects conversation content"
+      ],
+      "fontSize.increase": [
+        "Increase font size"
+      ],
+      "fontSize.title": [
+        "Font size"
+      ]
+    },
+    "trajectory": {
+      "details.scheduled": [
+        "Scheduled"
+      ]
+    }
+  }
+}

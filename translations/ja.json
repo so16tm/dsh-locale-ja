@@ -1148,7 +1148,7 @@
     "installUnconfirmedTitle": "インストール状況が未確認です",
     "installUnknownDescription": "Hostには、このリクエストIDで進行中のインストールがありません。再試行する前にプラグイン一覧を確認してください。",
     "installUnknownTitle": "インストール結果を取得できません",
-    "installUpgradeNotice": "オンデマンドの公式プラグインは、DSHとバージョンが異なる場合に「更新」を選べます。その他のプラグインを更新するには、アンインストールしてから再インストールしてください。",
+    "installUpgradeNotice": "プラグインを更新するには、アンインストールしてから新しい版をインストールしてください。",
     "installUseGithubMirror": "中国本土のミラーを使う",
     "installVersion": "バージョン{version}",
     "installViewTask": "インストール状況を表示",
