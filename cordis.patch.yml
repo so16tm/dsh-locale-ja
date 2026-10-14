@@ -1,0 +1,3 @@
+- insert:
+    - id: so16tm-locale-ja
+      name: '@so16tm/dsh-locale-ja'
