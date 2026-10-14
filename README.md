@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/images/readme-header.webp" alt="dsh-locale-ja — 日本語で使う DeepSeek Harness" width="960" />
+</p>
+
 # dsh-locale-ja
 
 DeepSeek Harness（DSH）の Web UI に **日本語** を追加するプラグインです。本体は変更せず、DSH が公開している言語パック API だけを使います。
