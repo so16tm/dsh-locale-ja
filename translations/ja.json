@@ -882,6 +882,13 @@
     "phase.blocked": "ブロックされた目標",
     "phase.paused": "一時停止中の目標"
   },
+  "inspectorPanel": {
+    "close": "折りたたむ",
+    "frameTitle": "NodeJSインスペクター",
+    "resize": "NodeJSインスペクターパネルの高さを調整",
+    "title": "NodeJSインスペクター",
+    "toggle": "NodeJSインスペクターの表示を切り替え"
+  },
   "job": {
     "count.idle.one": "{count}件のバックグラウンドジョブ",
     "count.idle.other": "{count}件のバックグラウンドジョブ",

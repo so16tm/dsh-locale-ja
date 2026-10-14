@@ -15,6 +15,7 @@
     "documentMarkdown": "dsh-client-ui-sidebar-documentpreview",
     "feedback": "dsh-client-ui-message-feedback",
     "goal": "dsh-client-ui-goal",
+    "inspectorPanel": "dsh-experimental-inspector",
     "job": "dsh-client-ui-jobs",
     "model": "dsh-client-ui-model-selection",
     "open-in-app": "dsh-client-ui-open-in-app",
@@ -946,6 +947,13 @@
       "phase.active.disarmed": "Inactive Goal",
       "phase.blocked": "Blocked Goal",
       "phase.paused": "Paused Goal"
+    },
+    "inspectorPanel": {
+      "close": "Collapse",
+      "frameTitle": "NodeJS Inspector",
+      "resize": "Resize NodeJS Inspector panel",
+      "title": "NodeJS Inspector",
+      "toggle": "Toggle NodeJS Inspector"
     },
     "job": {
       "count.idle.one": "{count} background job",
