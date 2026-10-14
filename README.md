@@ -2,7 +2,7 @@
 
 DeepSeek Harness（DSH）の Web UI に **日本語** を追加するプラグインです。本体は変更せず、DSH が公開している言語パック API だけを使います。
 
-> 開発中です。DSH 0.2.0-rc.2 の UI 文字列 2,615 件のうち 2,611 件を収録しています（残り4件は空白だけの区切り文字で、英語のまま使います）。
+> DSH 0.2.0-rc.2 の UI 文字列 2,615 件のうち 2,611 件を収録しています（残り4件は空白だけの区切り文字で、英語のまま使います）。
 
 ## 対応バージョン
 
@@ -10,13 +10,14 @@ DeepSeek Harness（DSH）の Web UI に **日本語** を追加するプラグ�
 
 ## インストール
 
+リポジトリから直接入れられます（ビルド済みの `lib/` をリポジトリに含めています）。
+
 ```bash
-pnpm install
-pnpm build
-pnpm pack
-dsh plugin --profile web add "$(pwd)/so16tm-dsh-locale-ja-0.0.0.tgz"
+dsh plugin --profile web add github:so16tm/dsh-locale-ja
 dsh web
 ```
+
+特定の版に固定する場合は `github:so16tm/dsh-locale-ja#<タグまたはコミット>` と指定します。アプリ画面の **Plugins → Add plugin** に同じ文字列を入力しても入れられます。更新するときは、いったん削除してから入れ直してください。
 
 **Settings → General → Language** で **日本語** を選びます。選択は DSH の設定に保存されます。
 

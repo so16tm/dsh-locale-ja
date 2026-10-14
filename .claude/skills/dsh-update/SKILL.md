@@ -63,7 +63,7 @@ pnpm add -D --save-exact @deepseek-ai/dsh-client-locale@<版>
 
 - `package.json` の `peerDependencies["@deepseek-ai/dsh-client-locale"]` を `<版>` に置き換える。辞書は1つの版の原文に合わせて刈り込むため、対応版は常に1つにする。
 - README の「対応バージョン」も同じ版に更新する。
-- `pnpm check` を実行する。テストは新しい版の実際の `LocaleRuntime` で、登録・切替・解除を確認する。
+- `pnpm check` を実行し、生成された `lib/` もコミットする（リポジトリから直接インストールされるため。CI が一致を検査する）。テストは新しい版の実際の `LocaleRuntime` で、登録・切替・解除を確認する。
 
 ## 5. PR
 

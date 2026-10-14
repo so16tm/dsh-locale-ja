@@ -17,3 +17,6 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
+      # lib/ is committed so `dsh plugin add github:so16tm/dsh-locale-ja` works without a build step.
+      - name: Committed lib/ matches the build
+        run: git diff --exit-code -- lib
