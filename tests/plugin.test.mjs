@@ -9,10 +9,8 @@ import { build } from 'esbuild';
 
 const require = createRequire(import.meta.url);
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const english = {
-  common: { cancel: 'Cancel', loading: 'Loading…' },
-  'settings.locale': { 'language.title': 'Language' },
-};
+// The English baseline extracted from the DSH release by `pnpm sync`.
+const english = JSON.parse(readFileSync(new URL('../sources/en.json', import.meta.url), 'utf8')).dictionaries;
 
 /** Evaluate a DSH ModuleLoader bundle the way the browser would, with no platform module table. */
 function loadBundle(filename, dependencies = {}) {

@@ -28,6 +28,21 @@ dsh web
 pnpm check   # 型チェック + ビルド + テスト
 ```
 
+### 本体の新しい版に追従する
+
+```bash
+pnpm sync 0.2.1-alpha.2   # 版または dist-tag（省略時は next）
+```
+
+npm から指定版の DSH をスクリプト無効で `.dsh-cache/` に取得し、配布コードを静的解析して英語原文を `sources/en.json` に書き出します。前の版と比べた追加・変更・削除の件数と翻訳率を表示し、本体から消えたキーは `translations/ja.json` から取り除きます。訳すべきキー（未訳、または英語が変わったもの）は `.dsh-cache/sync-report.json` の `todo` に英語原文つきで出力されます。
+
+訳した結果は `{ "名前空間": { "キー": "訳" } }` 形式の JSON にまとめ、次のコマンドで取り込みます。存在しないキーや `{name}` 置換の不一致は拒否されます。
+
+```bash
+pnpm apply path/to/new-translations.json
+pnpm coverage          # 翻訳率の確認（--strict で未訳があれば失敗）
+```
+
 設計上の約束事は [ARCHITECTURE.md](./ARCHITECTURE.md) を参照してください。
 
 ## ライセンス

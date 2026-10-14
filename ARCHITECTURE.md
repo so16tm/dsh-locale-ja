@@ -18,4 +18,8 @@
 - `src/locale.ts` — トランザクション型の登録と解除。
 - `src/font.ts` — 日本語選択中だけ存在する style タグ。
 - `scripts/build.mjs` — 型定義、Host ESM、ModuleLoader バンドルの生成と検査。
+- `scripts/sync.mjs` — 指定版の DSH を npm から取得し、英語原文の抽出・差分・作業リスト作成を行う（`pnpm sync`）。
+- `scripts/lib/extract.mjs`・`static-data.mjs` — 配布コードの `locale.register(...)` を AST から読む。対象パッケージのコードは実行しない。未知の登録形式はエラーにする。
+- `scripts/apply.mjs`・`coverage.mjs` — 訳の取り込み（検証つき）と翻訳率の監査。
+- `sources/en.json` — 現在対象とする版の英語原文。`sources/accepted-fallbacks.json` は英語のままでよいキー（空白だけの区切り文字など）。
 - `tests/` — 実際に配布されている `LocaleRuntime` を読み込んで、登録・切替・解除・巻き戻しを確認する。
