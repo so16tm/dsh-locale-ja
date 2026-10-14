@@ -1,52 +1,66 @@
 <p align="center">
-  <img src="docs/images/readme-header.webp" alt="dsh-locale-ja — 日本語で使う DeepSeek Harness" width="960" />
+  <img src="docs/images/readme-header.webp" alt="dsh-locale-ja — Japanese UI for DeepSeek Harness" width="960" />
 </p>
 
 # dsh-locale-ja
 
-DeepSeek Harness（DSH）の Web UI に **日本語** を追加するプラグインです。本体は変更せず、DSH が公開している言語パック API だけを使います。
+[English](README.md) | [日本語](README.ja.md)
 
-> DSH 0.2.1-alpha.2 の UI 文字列 2,766 件のうち 2,762 件を収録しています（残り4件は空白だけの区切り文字で、英語のまま使います）。0.2.0-rc.2 にしかない文字列の訳も残しています。
+A Japanese language plugin for the DeepSeek Harness (DSH) Web UI, built on DSH's public language-pack API without changing the host application.
 
-## 対応バージョン
+## Features
 
-`web` プロファイルで使います。プラグインの版ごとの対応 DSH は次のとおりです（各版の変更点は [CHANGELOG.md](./CHANGELOG.md)）。
+- Japanese translations for 2,762 of the 2,766 UI strings in DSH `0.2.1-alpha.2`. The remaining four strings are whitespace-only separators and retain their original English values.
+- Retains translations for strings found only in `0.2.0-rc.2`.
+- Requests Japanese AI replies while Japanese is explicitly selected in the UI. Users can still request another reply language.
 
-| プラグイン | 対応 DSH |
+## Compatibility
+
+Use this plugin with the `web` profile. See [CHANGELOG.md](CHANGELOG.md) for release details.
+
+| Plugin | Supported DSH |
 | --- | --- |
-| `v0.3.0` | `0.2.0-rc.2` 以降の `0.2.x`（確認済み：`0.2.0-rc.2`、`0.2.1-alpha.2`） |
-| `v0.2.0` | `0.2.0-rc.2` 以降の `0.2.x`（確認済み：`0.2.0-rc.2`、`0.2.1-alpha.2`） |
-| `v0.1.0` | `0.2.0-rc.2`、`0.2.1-alpha.2` |
+| `v0.3.0` | `0.2.x` starting with `0.2.0-rc.2` (verified: `0.2.0-rc.2`, `0.2.1-alpha.2`) |
+| `v0.2.0` | `0.2.x` starting with `0.2.0-rc.2` (verified: `0.2.0-rc.2`, `0.2.1-alpha.2`) |
+| `v0.1.0` | `0.2.0-rc.2`, `0.2.1-alpha.2` |
 
-`v0.2.0` 以降は、確認していない `0.2.x` の DSH でも読み込まれます。そうした版で新しく増えた文字列は、対応版が出るまで英語で表示されます。
+From `v0.2.0`, the plugin also loads on unverified DSH versions within this `0.2.x` range. Strings introduced by those versions appear in English until a plugin update adds translations.
 
-## インストール
+## Installation
 
-使っている DSH に対応する版のタグを指定して、リポジトリから直接入れます（ビルド済みの `lib/` をリポジトリに含めています）。
+Install a tag compatible with your DSH version. The repository includes prebuilt `lib/` files.
 
-```bash
-dsh plugin --profile web add github:so16tm/dsh-locale-ja#v0.3.0
+```sh
+dsh plugin --profile web add 'git+https://github.com/so16tm/dsh-locale-ja.git#v0.3.0'
 dsh web
 ```
 
-アプリ画面の **Plugins → Add plugin** に `github:so16tm/dsh-locale-ja#v0.3.0` と入力しても入れられます。タグを付けずに指定すると、まだ版として公開していない `main` の最新が入ります。
+This repository is private. Install Git and configure GitHub authentication for an account with access before installing from it.
 
-更新するときは、削除せずに新しい版のタグで同じコマンドを実行し、`dsh web` を再起動してください。入っている版が新しい版に置き換わります。
+You can also enter `git+https://github.com/so16tm/dsh-locale-ja.git#v0.3.0` in **Plugins → Add plugin**. Omitting the tag installs the latest `main`, which may contain unreleased changes.
 
-**Settings → General → Language** で **日本語** を選びます。選択は DSH の設定に保存されます。
+To update, run the same `add` command with the new release tag and restart `dsh web`. It replaces the installed version; you do not need to remove it first.
 
-他の日本語化プラグイン（`@fang2hou/dsh-locale-ja` など）とは同時に有効にできません。先に削除してください。
+To remove:
 
-### AI の応答言語
+```sh
+dsh plugin --profile web remove @so16tm/dsh-locale-ja
+```
 
-**Settings → General → Language** で **日本語** を選んでいる間、このプラグインは日本語で応答するよう AI に指示する一文を、システムプロンプトに加えます。DSH の既定のプロンプトには応答言語の指定がないため、ツールの出力やファイルの言語に引きずられて、応答が英語や中国語に切り替わることがあります。
+## Usage
 
-- 言語を切り替えると、次の応答から反映されます。
-- 日本語以外を選んでいるときや、言語を明示的に選んでいない（ブラウザー任せの）ときは、何も加えません。
-- DSH をループバック以外のアドレス（LAN 内の別の PC など）から開くと、言語の選択は DSH 側に保存されないため、この指示は加わりません。
-- ユーザーが別の言語を明示的に頼んだときは、その言語で応答します。
+Choose **日本語** in **Settings → General → Language**. DSH saves this selection in its settings.
 
-不要な場合は、プロファイルの `cordis.patch.yml` に次を追加すると無効になります。
+While Japanese is explicitly selected, the plugin adds an instruction to the system prompt asking the AI to reply in Japanese. DSH's default prompt does not specify a reply language, so otherwise tool output or file contents can cause replies to switch to English or Chinese.
+
+- Changing the selected language takes effect on the next reply.
+- Selecting another language, or leaving language selection to the browser, adds no instruction.
+- When DSH is opened from a non-loopback address (for example, another PC on the LAN), DSH does not save the language selection on the host, so the instruction is not added.
+- Explicit requests from the user for another language take precedence.
+
+## Configuration
+
+To disable the reply-language instruction, add this entry to the profile's `cordis.patch.yml`:
 
 ```yaml
 - id: so16tm-locale-ja
@@ -54,42 +68,51 @@ dsh web
     replyInUiLanguage: false
 ```
 
-## 開発
+## Limitations
 
-```bash
-pnpm check   # 型チェック + ビルド + テスト
+Do not enable this plugin alongside another Japanese language plugin, such as `@fang2hou/dsh-locale-ja`. Remove the other plugin first.
+
+## Development
+
+```sh
+pnpm install --frozen-lockfile
+pnpm check
 ```
 
-### 本体の新しい版に追従する
+`pnpm check` runs type checking, the build, tests, translation coverage, and release-note validation.
 
-Claude Code では `/dsh-update <版>` で、以下の手順と翻訳・互換性確認・PR 作成までをまとめて実行できます（[スキル](./.claude/skills/dsh-update/SKILL.md)）。手作業で行う場合は次のとおりです。
+### Tracking a new DSH release
 
-```bash
-pnpm sync 0.2.1-alpha.2   # 版または dist-tag（省略時は next）
+In Claude Code, `/dsh-update <version>` runs the update workflow, including translation, compatibility checks, and PR creation. See the [skill](.claude/skills/dsh-update/SKILL.md). To perform the workflow manually:
+
+```sh
+pnpm sync 0.2.1-alpha.2
 ```
 
-npm から指定版の DSH をスクリプト無効で `.dsh-cache/` に取得し、配布コードを静的解析して英語原文を `sources/en.json` に書き出します。前の版と比べた追加・変更・削除の件数と翻訳率を表示します。訳すべきキー（未訳、または英語が変わったもの）は `.dsh-cache/sync-report.json` の `todo` に英語原文つきで出力されます。
+The argument accepts a version or dist-tag and defaults to `next`. The script downloads the specified DSH version from npm into `.dsh-cache/` with package scripts disabled, statically analyzes its distributed code, and writes the English source strings to `sources/en.json`. It reports added, changed, and removed strings and translation coverage. Keys requiring translation (missing translations or changed English) appear in the `todo` field of `.dsh-cache/sync-report.json`, together with their English source.
 
-前の版は引き続き対応版として扱います。前の版にしかないキーや英語が違うキーは、その英語とともに `sources/older.json` に残り、訳も消えません。訳はどの版の英語にも合う言い回しにします（`todo` の `olderEn`）。古い版の対応をやめるときだけ `--drop-older` を付けます。前の版の英語の記録と、新しい版で消えたキーの訳がまとめて消えます。
+The previous version remains supported. Keys found only in that version, or whose English differs, are retained with their English text in `sources/older.json`; their translations are kept as well. Use wording that fits both English versions (see `olderEn` in `todo`). Use `--drop-older` only when dropping support for the previous version: it removes the previous English records and translations for keys absent from the new version.
 
-訳した結果は `{ "名前空間": { "キー": "訳" } }` 形式の JSON にまとめ、次のコマンドで取り込みます。存在しないキーや `{name}` 置換の不一致は拒否されます。
+Prepare translations as JSON in the form `{ "namespace": { "key": "translation" } }`, then apply them:
 
-```bash
+```sh
 pnpm apply path/to/new-translations.json
-pnpm coverage          # 翻訳率の確認（--strict で未訳があれば失敗）
+pnpm coverage
 ```
 
-### 版の公開
+Unknown keys and mismatched `{name}` placeholders are rejected. Use `pnpm coverage --strict` to fail when translations are missing.
 
-版は `package.json` の `version` とタグ `v<版>` で管理します。
+### Releasing a version
 
-1. PR で `version` を上げ、[CHANGELOG.md](./CHANGELOG.md) に `## v<版>` の節（対応 DSH と変更点）を追加し、README の対応表を更新します。節がないと `pnpm check` が失敗します。
-2. PR を `main` にマージすると、CI がタグ `v<版>` と GitHub のリリースを自動で作成します。
+Versions are managed by `version` in `package.json` and the `v<version>` Git tag.
 
-新しい DSH への対応や訳の追加・変更はマイナー版（`0.1.0` → `0.2.0`）、誤訳の修正などはパッチ版（`0.1.0` → `0.1.1`）を上げます。
+1. In a PR, bump `version`, add a `## v<version>` section to [CHANGELOG.md](CHANGELOG.md) describing supported DSH versions and changes, and update the compatibility tables in both `README.md` and `README.ja.md`. `pnpm check` fails if the changelog section is missing.
+2. Merging the PR into `main` lets CI automatically create the `v<version>` tag and a GitHub release.
 
-設計上の約束事は [ARCHITECTURE.md](./ARCHITECTURE.md) を参照してください。
+Use a minor version bump for new DSH support or added/changed translations (`0.1.0` → `0.2.0`), and a patch bump for translation corrections (`0.1.0` → `0.1.1`).
 
-## ライセンス
+See [ARCHITECTURE.md](ARCHITECTURE.md) for design contracts.
 
-[MIT](./LICENSE)。参考にしたプロジェクトは [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) に記載しています。
+## License
+
+[MIT](LICENSE). Referenced projects are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
