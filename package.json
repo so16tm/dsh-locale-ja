@@ -1,0 +1,51 @@
+{
+  "name": "@so16tm/dsh-locale-ja",
+  "version": "0.0.0",
+  "description": "Japanese (日本語) UI language pack for DeepSeek Harness, built only on the public locale API.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/so16tm/dsh-locale-ja.git"
+  },
+  "homepage": "https://github.com/so16tm/dsh-locale-ja#readme",
+  "bugs": {
+    "url": "https://github.com/so16tm/dsh-locale-ja/issues"
+  },
+  "keywords": ["dsh-plugin", "deepseek-harness", "dsh", "i18n", "japanese", "locale"],
+  "main": "./lib/index.js",
+  "types": "./lib/types/index.d.ts",
+  "exports": {
+    ".": { "types": "./lib/types/index.d.ts", "default": "./lib/index.js" },
+    "./client": { "types": "./lib/types/client.d.ts", "default": "./lib/client.js" },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./locale/*.json": "./locale/*.json",
+    "./package.json": "./package.json"
+  },
+  "files": ["lib", "locale", "cordis.patch.yml", "README.md", "LICENSE", "THIRD_PARTY_NOTICES.md"],
+  "engines": { "node": ">=22" },
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": ["@deepseek-ai/dsh-client-locale"]
+    }
+  },
+  "peerDependencies": { "@deepseek-ai/dsh-client-locale": "0.2.0-rc.2" },
+  "peerDependenciesMeta": { "@deepseek-ai/dsh-client-locale": { "optional": true } },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.4",
+    "@deepseek-ai/dsh-client-locale": "0.2.0-rc.2",
+    "@types/node": "24.13.4",
+    "esbuild": "0.28.2",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.mjs",
+    "check": "pnpm typecheck && pnpm build && pnpm test",
+    "prepack": "node scripts/build.mjs"
+  }
+}
