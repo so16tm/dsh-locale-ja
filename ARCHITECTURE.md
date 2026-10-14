@@ -10,7 +10,7 @@
 4. **Host 側は応答言語だけ**：`src/index.ts` は Loader 行のマウント先で、`systemPrompt` があるときに限り、UI で選んだ言語で応答させる指示を `systemPrompt.section()`（公開 API）で1つ足す。既定のプロンプトには応答言語の指定がなく、ツール出力などに引きずられて英語や中国語に切り替わるため。言語は `settings.describe()` の `locale` 項目（`dsh-client-locale` が保存する `preference`）からプロンプト組み立てのたびに読み、未選択なら日本語とする。設定 `replyInUiLanguage: false` で無効にできる。
 5. **フォントは日本語選択中だけ**：`:where(:root, body)` で UI・コードのフォントトークンを上書きし、他の言語に切り替えたら取り除く。Web フォントは取得しない。
 6. **訳はデータ、コードは英語**：日本語は `translations/ja.json`（名前空間 → キー → 訳）にだけ置く。`locale/*.json` はこのプラグイン自身の表示名・説明で、DSH が `resolveText()` で読む別物。
-7. **peer は検証済みの版に固定**：`peerDependencies` の `@deepseek-ai/dsh-client-locale` には検証を終えた版だけを列挙する。
+7. **peer は検証済みの版だけ**：`peerDependencies` の `@deepseek-ai/dsh-client-locale` には検証を終えた版だけを `||` で列挙する。DSH はこの範囲で互換性を判定する。原文は最新の対応版から取り、それより前の対応版にしかないキーの訳は `sources/older-keys.json` に記録して残す。
 
 ## ファイル
 
