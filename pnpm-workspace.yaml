@@ -1,2 +1,7 @@
-# esbuild ships its binary in a platform-specific optional package; no install script is needed.
-onlyBuiltDependencies: []
+# esbuild ships its binary in a platform-specific optional package, so its
+# install script is not needed. pnpm 10 reads ignoredBuiltDependencies;
+# pnpm 11+ reads allowBuilds and fails a frozen install without it.
+ignoredBuiltDependencies:
+  - esbuild
+allowBuilds:
+  esbuild: false
