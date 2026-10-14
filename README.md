@@ -10,34 +10,32 @@ A Japanese language plugin for the DeepSeek Harness (DSH) Web UI, built on DSH's
 
 ## Features
 
-- Japanese translations for 2,762 of the 2,766 UI strings in DSH `0.2.1-alpha.2`. The remaining four strings are whitespace-only separators and retain their original English values.
-- Retains translations for strings found only in `0.2.0-rc.2`.
+- Japanese translations for the DSH Web UI. Whitespace-only separators retain their original values.
+- Retains translations needed by older supported DSH versions. Translation coverage for each release is recorded in CHANGELOG.md.
 - Requests Japanese AI replies while Japanese is explicitly selected in the UI. Users can still request another reply language.
 
 ## Compatibility
 
-Use this plugin with the `web` profile. See [CHANGELOG.md](CHANGELOG.md) for release details.
+Choose a release compatible with your DSH version from [GitHub Releases](https://github.com/so16tm/dsh-locale-ja/releases). Supported and verified DSH versions and release-specific changes are recorded in the release notes and [CHANGELOG.md](CHANGELOG.md).
 
-| Plugin | Supported DSH |
-| --- | --- |
-| `v0.3.0` | `0.2.x` starting with `0.2.0-rc.2` (verified: `0.2.0-rc.2`, `0.2.1-alpha.2`) |
-| `v0.2.0` | `0.2.x` starting with `0.2.0-rc.2` (verified: `0.2.0-rc.2`, `0.2.1-alpha.2`) |
-| `v0.1.0` | `0.2.0-rc.2`, `0.2.1-alpha.2` |
+For machine-readable requirements, see `peerDependencies` and `engines` in [package.json](package.json) at the selected tag.
 
-From `v0.2.0`, the plugin also loads on unverified DSH versions within this `0.2.x` range. Strings introduced by those versions appear in English until a plugin update adds translations.
+Use this plugin with the `web` profile. On a compatible but unverified DSH version, newly introduced strings may remain in English until translations are added.
 
 ## Installation
 
 Install a tag compatible with your DSH version. The repository includes prebuilt `lib/` files.
 
+Replace `<tag>` below with the full tag name of the release you selected from [GitHub Releases](https://github.com/so16tm/dsh-locale-ja/releases).
+
 ```sh
-dsh plugin --profile web add 'git+https://github.com/so16tm/dsh-locale-ja.git#v0.3.0'
+dsh plugin --profile web add 'git+https://github.com/so16tm/dsh-locale-ja.git#<tag>'
 dsh web
 ```
 
 This repository is private. Install Git and configure GitHub authentication for an account with access before installing from it.
 
-You can also enter `git+https://github.com/so16tm/dsh-locale-ja.git#v0.3.0` in **Plugins → Add plugin**. Omitting the tag installs the latest `main`, which may contain unreleased changes.
+You can also enter `git+https://github.com/so16tm/dsh-locale-ja.git#<tag>` in **Plugins → Add plugin**. Omitting the tag installs the latest `main`, which may contain unreleased changes.
 
 To update, run the same `add` command with the new release tag and restart `dsh web`. It replaces the installed version; you do not need to remove it first.
 
@@ -86,7 +84,7 @@ pnpm check
 In Claude Code, `/dsh-update <version>` runs the update workflow, including translation, compatibility checks, and PR creation. See the [skill](.claude/skills/dsh-update/SKILL.md). To perform the workflow manually:
 
 ```sh
-pnpm sync 0.2.1-alpha.2
+pnpm sync next
 ```
 
 The argument accepts a version or dist-tag and defaults to `next`. The script downloads the specified DSH version from npm into `.dsh-cache/` with package scripts disabled, statically analyzes its distributed code, and writes the English source strings to `sources/en.json`. It reports added, changed, and removed strings and translation coverage. Keys requiring translation (missing translations or changed English) appear in the `todo` field of `.dsh-cache/sync-report.json`, together with their English source.
@@ -106,12 +104,14 @@ Unknown keys and mismatched `{name}` placeholders are rejected. Use `pnpm covera
 
 Versions are managed by `version` in `package.json` and the `v<version>` Git tag.
 
-1. In a PR, bump `version`, add a `## v<version>` section to [CHANGELOG.md](CHANGELOG.md) describing supported DSH versions and changes, and update the compatibility tables in both `README.md` and `README.ja.md`. `pnpm check` fails if the changelog section is missing.
+1. In a PR, bump `version` and add a `## v<version>` section to [CHANGELOG.md](CHANGELOG.md) describing supported DSH versions and changes. `pnpm check` fails if the changelog section is missing.
 2. Merging the PR into `main` lets CI automatically create the `v<version>` tag and a GitHub release.
 
-Use a minor version bump for new DSH support or added/changed translations (`0.1.0` → `0.2.0`), and a patch bump for translation corrections (`0.1.0` → `0.1.1`).
+Use a minor version bump for new DSH support or added/changed translations, and a patch bump for translation corrections.
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for design contracts.
+
+Update both READMEs when usage changes; release numbers and compatibility records belong in CHANGELOG.md. CI uses that version's CHANGELOG section as the GitHub release notes.
 
 ## License
 

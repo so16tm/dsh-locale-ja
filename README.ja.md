@@ -10,34 +10,32 @@ DeepSeek Harness（DSH）の Web UI に日本語を追加するプラグイン�
 
 ## 機能
 
-- DSH `0.2.1-alpha.2` の UI 文字列 2,766 件のうち 2,762 件を収録しています。残りの4件は空白だけの区切り文字で、英語の原文をそのまま使います。
-- `0.2.0-rc.2` にしかない文字列の訳も残しています。
+- DSH の Web UI を日本語化します。空白だけの区切り文字は原文をそのまま使います。
+- 古い対応版で必要な訳も残しています。各版の翻訳状況は CHANGELOG.md に記録しています。
 - UI で日本語を明示的に選択している間、AI に日本語での応答を指示します。ユーザーが別の応答言語を指定することもできます。
 
 ## 対応バージョン
 
-`web` プロファイルで使います。各版の変更点は [CHANGELOG.md](CHANGELOG.md) を参照してください。
+使用中の DSH に対応する版を [GitHub Releases](https://github.com/so16tm/dsh-locale-ja/releases) から選んでください。対応・検証済みの DSH、版ごとの変更点は、各リリースの説明と [CHANGELOG.md](CHANGELOG.md) に記録しています。
 
-| プラグイン | 対応 DSH |
-| --- | --- |
-| `v0.3.0` | `0.2.0-rc.2` 以降の `0.2.x`（確認済み：`0.2.0-rc.2`、`0.2.1-alpha.2`） |
-| `v0.2.0` | `0.2.0-rc.2` 以降の `0.2.x`（確認済み：`0.2.0-rc.2`、`0.2.1-alpha.2`） |
-| `v0.1.0` | `0.2.0-rc.2`、`0.2.1-alpha.2` |
+機械的な要件判定に使う値は、選んだタグの [package.json](package.json) の `peerDependencies` と `engines` を参照してください。
 
-`v0.2.0` 以降は、確認していない対応範囲内の `0.2.x` の DSH でも読み込まれます。そうした版で新しく増えた文字列は、対応版が出るまで英語で表示されます。
+`web` プロファイルで使います。対応範囲内でも未検証の DSH では、新しく増えた文字列が翻訳の追加まで英語で表示される場合があります。
 
 ## インストール
 
 使っている DSH に対応する版のタグを指定して、リポジトリから直接入れます。ビルド済みの `lib/` をリポジトリに含めています。
 
+以下の `<tag>` は、[GitHub Releases](https://github.com/so16tm/dsh-locale-ja/releases) で選んだ版のタグ名全体に置き換えてください。
+
 ```sh
-dsh plugin --profile web add 'git+https://github.com/so16tm/dsh-locale-ja.git#v0.3.0'
+dsh plugin --profile web add 'git+https://github.com/so16tm/dsh-locale-ja.git#<tag>'
 dsh web
 ```
 
 このリポジトリは非公開です。リポジトリへのアクセス権があるアカウントで GitHub 認証を設定し、Git をインストールしてから実行してください。
 
-アプリ画面の **Plugins → Add plugin** に `git+https://github.com/so16tm/dsh-locale-ja.git#v0.3.0` と入力しても入れられます。タグを付けずに指定すると、まだ版として公開していない `main` の最新が入ります。
+アプリ画面の **Plugins → Add plugin** に `git+https://github.com/so16tm/dsh-locale-ja.git#<tag>` と入力しても入れられます。タグを付けずに指定すると、まだ版として公開していない `main` の最新が入ります。
 
 更新するときは、削除せずに新しい版のタグで同じ `add` コマンドを実行し、`dsh web` を再起動してください。入っている版が新しい版に置き換わります。
 
@@ -86,7 +84,7 @@ pnpm check
 Claude Code では `/dsh-update <版>` で、翻訳・互換性確認・PR 作成までをまとめて実行できます（[スキル](.claude/skills/dsh-update/SKILL.md)）。手作業で行う場合は次のとおりです。
 
 ```sh
-pnpm sync 0.2.1-alpha.2
+pnpm sync next
 ```
 
 引数には版または dist-tag を指定します。省略時は `next` です。npm から指定版の DSH をスクリプト無効で `.dsh-cache/` に取得し、配布コードを静的解析して英語原文を `sources/en.json` に書き出します。前の版と比べた追加・変更・削除の件数と翻訳率を表示します。訳すべきキー（未訳、または英語が変わったもの）は `.dsh-cache/sync-report.json` の `todo` に英語原文つきで出力されます。
@@ -106,12 +104,14 @@ pnpm coverage
 
 版は `package.json` の `version` とタグ `v<版>` で管理します。
 
-1. PR で `version` を上げ、[CHANGELOG.md](CHANGELOG.md) に `## v<版>` の節（対応 DSH と変更点）を追加し、`README.md` と `README.ja.md` の両方の対応表を更新します。節がないと `pnpm check` が失敗します。
+1. PR で `version` を上げ、[CHANGELOG.md](CHANGELOG.md) に `## v<版>` の節（対応 DSH と変更点）を追加します。節がないと `pnpm check` が失敗します。
 2. PR を `main` にマージすると、CI がタグ `v<版>` と GitHub のリリースを自動で作成します。
 
-新しい DSH への対応や訳の追加・変更はマイナー版（`0.1.0` → `0.2.0`）、誤訳の修正などはパッチ版（`0.1.0` → `0.1.1`）を上げます。
+新しい DSH への対応や訳の追加・変更はマイナー版、誤訳の修正などはパッチ版を上げます。
 
 設計上の約束事は [ARCHITECTURE.md](ARCHITECTURE.md) を参照してください。
+
+README の両言語版は使い方が変わるときに更新し、版番号と対応情報は CHANGELOG.md に記録します。CI は該当する版の CHANGELOG の節を GitHub リリースの説明に使います。
 
 ## ライセンス
 
