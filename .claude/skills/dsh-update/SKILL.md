@@ -62,7 +62,9 @@ pnpm coverage --strict
 pnpm add -D --save-exact @deepseek-ai/dsh-client-locale@<版>
 ```
 
-- `package.json` の `peerDependencies["@deepseek-ai/dsh-client-locale"]` を `<版>` に置き換える。辞書は1つの版の原文に合わせて刈り込むため、対応版は常に1つにする。
+- 前の版の利用者を残す（例：新版が alpha で、latest はまだ前の版）なら、手順1を `pnpm sync <版> --keep-stale` で実行する。新版で消えたキーの訳が残り、`sources/older-keys.json` に記録される。`peerDependencies["@deepseek-ai/dsh-client-locale"]` は `前の版 || <版>` のように、検証した版を `||` で列挙する。
+- 前の版の対応をやめるときは `--keep-stale` なしで sync し、peer を `<版>` だけにする。
+- DSH は peer の範囲外の版で、プラグインを互換性なしとして扱う（`dsh plugin allow-version` で許可が必要）。範囲には実際に確認した版だけを書く。
 - README の「対応バージョン」も同じ版に更新する。
 - `pnpm check` を実行し、生成された `lib/` もコミットする（リポジトリから直接インストールされるため。CI が一致を検査する）。テストは新しい版の実際の `LocaleRuntime` で、登録・切替・解除を確認する。
 

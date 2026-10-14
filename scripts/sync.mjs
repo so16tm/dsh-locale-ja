@@ -1,7 +1,9 @@
 // pnpm sync [version|dist-tag] [--keep-stale]
 // Fetch a DSH release from npm, re-extract the English baseline, and report
 // what the Japanese dictionary needs. It never edits translations except to
-// drop keys the new baseline no longer has (unless --keep-stale).
+// drop keys the new baseline no longer has. With --keep-stale those keys stay
+// for the older DSH versions the plugin still supports, and are listed in
+// sources/older-keys.json so the audit accepts them.
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -15,6 +17,7 @@ const spec = args.find((a) => !a.startsWith('--')) ?? 'next';
 const CACHE = resolve('.dsh-cache');
 const BASELINE = resolve('sources/en.json');
 const ACCEPTED = resolve('sources/accepted-fallbacks.json');
+const OLDER = resolve('sources/older-keys.json');
 const JA = resolve('translations/ja.json');
 const readJson = (file, fallback) => (existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : fallback);
 const writeJson = (file, value) => writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`);
@@ -52,6 +55,7 @@ if (!keepStale) {
   writeJson(JA, sortKeys(Object.fromEntries(Object.entries(japanese).map(([n, d]) => [n, sortKeys(d)]))));
 }
 const result = audit(next.dictionaries, japanese, accepted);
+writeJson(OLDER, keepStale ? result.stale : []);
 
 // Work list for the translator: untranslated keys plus keys whose English changed.
 const lookup = (id) => {

@@ -67,6 +67,9 @@ placeholder, including repeated occurrences. Do not translate `/plan`, `ID`,
 | Steer | 割り込み送信 | Sends a message during an active run |
 | Trace / trajectory | トレース | View name, loading state, and accessibility labels |
 | Plan / skill / subagent | プラン / スキル / サブエージェント | UI concepts; retain literal tool or command identifiers |
+| Job / background job | ジョブ / バックグラウンドジョブ | Shell jobs the agent runs in the background; distinct from タスク |
+| Task | タスク | Work given to the agent, team tasks, and scheduled automation tasks |
+| Default | 既定 / 既定値 | Never デフォルト; 既定値 for a value, 既定 for a label or selection |
 
 Use `件` for subagent counts so interpolated values such as 12 remain natural.
 Keep `.one` and `.other` strings identical when Japanese has no corresponding
