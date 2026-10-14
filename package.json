@@ -40,6 +40,8 @@
     "locale",
     "cordis.patch.yml",
     "README.md",
+    "README.ja.md",
+    "docs/images/readme-header.webp",
     "LICENSE",
     "THIRD_PARTY_NOTICES.md",
     "licenses",
