@@ -30,6 +30,7 @@ diff .dsh-cache/<前の版>/node_modules/@deepseek-ai/dsh-client-locale/lib/type
 ```
 
 - 使っているのは `register` / `addLanguage` / `getLocale` / `subscribe` だけ（`src/types.ts`）。このいずれかのシグネチャか意味が変わっていたら、翻訳に入る前に止めてユーザーに報告する。
+- 応答言語の指示（`src/index.ts`）が使う公開面を確認する。`@deepseek-ai/dsh-system-prompt` の `section()`、`@deepseek-ai/dsh-settings` の `describe()`、`dsh-client-locale/lib/index.js` の設定名（`locale` / `preference`）の差分を見て、変わっていたら直す。devDependencies のこの2つも新しい版に揃える。
 - フォントのトークン名（`--dsw-font-family`、`--ds-font-family-code`）が新しい版の CSS に残っているかを `grep -r` で確認する。消えていたら `src/font.ts` を直す。
 - client manifest（`dsh.client`・`dsh.bundle.patch`）の仕様が変わっていないかを、`dsh-client-modules` と `dsh-plugin-manager` の差分で確認する。
 
