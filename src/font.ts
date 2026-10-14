@@ -9,13 +9,18 @@ const CODE_STACK =
   "'SF Mono', 'JetBrains Mono', 'Fira Code', Consolas, 'Liberation Mono', Menlo, " +
   "'BIZ UDGothic', 'Yu Gothic UI', 'Meiryo', 'Noto Sans CJK JP', monospace";
 
-// :where() keeps specificity at zero so a user's own font plugin still wins,
-// while covering body-level theme tokens that would defeat :root inheritance.
+// DSH 0.2.1+ keeps its built-in stacks in --dsh-font-family-*-default on :root, and on body
+// puts the user's font from Settings ahead of them in --dsw-font-family / --ds-font-family-code.
+// Replacing only the built-in stacks keeps that user choice. DSH 0.2.0 sets --dsw-font-family
+// and --ds-font-family-code on :root alone, so they are replaced there as well; in 0.2.1+ the
+// body declarations shadow these for every element below <html>.
 const CSS =
-  ':where(:root, body) {' +
+  ':root {' +
+  `--dsh-font-family-text-default: ${UI_STACK} !important;` +
+  `--dsh-font-family-code-default: ${CODE_STACK} !important;` +
   `--dsw-font-family: ${UI_STACK} !important;` +
-  "--dsw-font-family-brand: 'Montserrat', var(--dsw-font-family) !important;" +
   `--ds-font-family-code: ${CODE_STACK} !important;` +
+  `--dsw-font-family-brand: 'Montserrat', ${UI_STACK} !important;` +
   '}';
 
 /** Own a style tag that exists only while Japanese is the active locale. */
