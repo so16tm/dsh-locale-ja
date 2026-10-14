@@ -6,18 +6,24 @@ DeepSeek Harness（DSH）の Web UI に **日本語** を追加するプラグ�
 
 ## 対応バージョン
 
-- DSH `0.2.1-alpha.2` と `0.2.0-rc.2` の `web` プロファイル
+`web` プロファイルで使います。プラグインの版ごとの対応 DSH は次のとおりです（各版の変更点は [CHANGELOG.md](./CHANGELOG.md)）。
+
+| プラグイン | 対応 DSH |
+| --- | --- |
+| `v0.1.0` | `0.2.0-rc.2`、`0.2.1-alpha.2` |
 
 ## インストール
 
-リポジトリから直接入れられます（ビルド済みの `lib/` をリポジトリに含めています）。
+使っている DSH に対応する版のタグを指定して、リポジトリから直接入れます（ビルド済みの `lib/` をリポジトリに含めています）。
 
 ```bash
-dsh plugin --profile web add github:so16tm/dsh-locale-ja
+dsh plugin --profile web add github:so16tm/dsh-locale-ja#v0.1.0
 dsh web
 ```
 
-特定の版に固定する場合は `github:so16tm/dsh-locale-ja#<タグまたはコミット>` と指定します。アプリ画面の **Plugins → Add plugin** に同じ文字列を入力しても入れられます。更新するときは、いったん削除してから入れ直してください。
+アプリ画面の **Plugins → Add plugin** に `github:so16tm/dsh-locale-ja#v0.1.0` と入力しても入れられます。タグを付けずに指定すると、まだ版として公開していない `main` の最新が入ります。
+
+更新するときは、いったん削除してから新しい版のタグで入れ直してください。
 
 **Settings → General → Language** で **日本語** を選びます。選択は DSH の設定に保存されます。
 
@@ -61,6 +67,15 @@ npm から指定版の DSH をスクリプト無効で `.dsh-cache/` に取得�
 pnpm apply path/to/new-translations.json
 pnpm coverage          # 翻訳率の確認（--strict で未訳があれば失敗）
 ```
+
+### 版の公開
+
+版は `package.json` の `version` とタグ `v<版>` で管理します。
+
+1. PR で `version` を上げ、[CHANGELOG.md](./CHANGELOG.md) に `## v<版>` の節（対応 DSH と変更点）を追加し、README の対応表を更新します。節がないと `pnpm check` が失敗します。
+2. PR を `main` にマージすると、CI がタグ `v<版>` と GitHub のリリースを自動で作成します。
+
+新しい DSH への対応や訳の追加・変更はマイナー版（`0.1.0` → `0.2.0`）、誤訳の修正などはパッチ版（`0.1.0` → `0.1.1`）を上げます。
 
 設計上の約束事は [ARCHITECTURE.md](./ARCHITECTURE.md) を参照してください。
 
