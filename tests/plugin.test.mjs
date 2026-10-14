@@ -5,6 +5,7 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 import { Context } from '@deepseek-ai/cordis';
+import { SystemPrompt, renderPrompt } from '@deepseek-ai/dsh-system-prompt';
 import { build } from 'esbuild';
 
 const require = createRequire(import.meta.url);
@@ -55,9 +56,7 @@ const localeModule = { exports: {} };
 vm.runInNewContext(localeBuild.outputFiles[0].text, { module: localeModule, exports: localeModule.exports });
 const { registerJapanese } = localeModule.exports;
 
-test('host entry is inert and the manifest mounts an immediate web client', async () => {
-  const host = await import('../lib/index.js');
-  assert.equal(host.apply(), undefined);
+test('the manifest mounts an immediate web client', () => {
   assert.equal(plugin.id, pkg.name);
   assert.equal(pkg.dsh.client.platform, 'web');
   assert.equal(pkg.dsh.client.immediately, true);
@@ -101,4 +100,40 @@ test('a failed activation rolls back its partial registrations', () => {
   // `transient` was released, so another owner can register it again.
   locale.register('transient', 'ja', { key: '再登録' })();
   existing();
+});
+
+test('host entry asks the agent to reply in the UI language chosen in Settings', async () => {
+  const host = await import('../lib/index.js');
+  const ctx = new Context();
+  ctx.plugin(SystemPrompt, {});
+  let preference;
+  ctx.provide('settings', { describe: () => [{ ns: 'locale', value: { preference } }] });
+  const prompt = async () => renderPrompt(await ctx.systemPrompt.assemble());
+
+  const fork = ctx.plugin(host, {});
+  await fork;
+  // Left to the browser: the Host cannot see it, so the pack's own language is used.
+  assert.ok((await prompt()).includes(host.replyInstruction('ja')));
+  assert.match(host.replyInstruction('ja'), /in Japanese/);
+  preference = 'en';
+  assert.ok((await prompt()).includes(host.replyInstruction('en')));
+  assert.match(host.replyInstruction('en'), /in English/);
+  preference = 'ja';
+  assert.ok((await prompt()).includes(host.replyInstruction('ja')));
+  await fork.dispose();
+  assert.ok(!(await prompt()).includes('Always write your messages'));
+
+  const off = ctx.plugin(host, { replyInUiLanguage: false });
+  await off;
+  assert.ok(!(await prompt()).includes('Always write your messages'));
+  await off.dispose();
+});
+
+test('host entry loads without a prompt registry or settings', async () => {
+  const host = await import('../lib/index.js');
+  assert.equal(host.selectedLanguage(undefined), undefined);
+  assert.equal(host.selectedLanguage({ describe() { throw new Error('closed'); } }), undefined);
+  const fork = new Context().plugin(host, {});
+  await fork;
+  await fork.dispose();
 });
