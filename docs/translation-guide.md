@@ -4,8 +4,8 @@
 
 ## Review the action, not just the source word
 
-Read the English and Chinese strings and their call sites in the pinned DSH
-packages under `node_modules/@deepseek-ai/`. The control's actual behavior is
+Read the English and Chinese strings and their call sites in the DSH packages
+that `pnpm sync` installed under `.dsh-cache/<version>/node_modules/@deepseek-ai/`. The control's actual behavior is
 the deciding context. For example, a queue button adds a message for later
 delivery; it does not merely report that delivery is waiting.
 

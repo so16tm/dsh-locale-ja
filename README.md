@@ -30,6 +30,8 @@ pnpm check   # 型チェック + ビルド + テスト
 
 ### 本体の新しい版に追従する
 
+Claude Code では `/dsh-update <版>` で、以下の手順と翻訳・互換性確認・PR 作成までをまとめて実行できます（[スキル](./.claude/skills/dsh-update/SKILL.md)）。手作業で行う場合は次のとおりです。
+
 ```bash
 pnpm sync 0.2.1-alpha.2   # 版または dist-tag（省略時は next）
 ```
