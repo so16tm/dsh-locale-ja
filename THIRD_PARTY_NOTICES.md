@@ -9,7 +9,7 @@
 
 ## 翻訳データ（`translations/ja.json`）
 
-DSH 0.2.0-rc.2 時点の次の5実装の訳を、キーごとに支持数で選んで統合しました（同数の場合は上から順に優先）。選ばれなかった候補は `sources/merge-candidates.json` に残しています。
+DSH 0.2.0-rc.2 時点の次の5実装の訳を統合しました。全実装で一致した訳はそのまま採用し、食い違った1,357キーは英語原文・中国語訳・翻訳ガイドに照らして1件ずつ審査しました（うち201件は表記や誤訳を修正）。候補と審査結果は `sources/merge-candidates.json` に残しています。
 
 1. [yuu1111/dsh-locale-ja](https://github.com/yuu1111/dsh-locale-ja)（2026-10-14 時点）— Copyright (c) 2026 fang2hou
 2. [heavyfox/dsh-locale-ja-next](https://github.com/heavyfox/dsh-locale-ja-next) 0.1.1 — Copyright (c) 2026 dsh-locale-ja-next contributors

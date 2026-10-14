@@ -39,6 +39,17 @@ headings, and statuses. Preserve product names, command names, paths, and every
 placeholder, including repeated occurrences. Do not translate `/plan`, `ID`,
 `API`, or `JSON` as if they were prose.
 
+## Typography
+
+- No half-width space between Japanese and a placeholder or an ASCII
+  word/number: `タスク{label}を停止`, `JSONをコピー`, `エージェントID`. Spaces
+  between two ASCII tokens stay.
+- Ellipsis is the single character `…`.
+- Buttons, headings, labels, statuses and menu items have no final `。`.
+  Explanations, descriptions, errors and confirmations are full sentences in
+  です・ます and end with `。`.
+- Strings with identical English and the same role use identical Japanese.
+
 ## Shared terminology
 
 | Concept | Japanese | Context |
