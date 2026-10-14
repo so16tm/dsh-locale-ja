@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseData } from './static-data.mjs';
 
@@ -23,8 +23,7 @@ export function extractEnglish(scopeDir) {
   };
 
   for (const pkg of readdirSync(scopeDir).filter((p) => p.startsWith('dsh-')).sort()) {
-    const filename = join(scopeDir, pkg, 'lib', 'client.js');
-    if (!existsSync(filename)) continue;
+    for (const filename of registeringFiles(join(scopeDir, pkg, 'lib'))) {
     const { source, walk, evaluate, ts, declarations } = parseData(readFileSync(filename, 'utf8'));
     walk(source, (node) => {
       if (!ts.isCallExpression(node) || !ts.isPropertyAccessExpression(node.expression)) return;
@@ -47,11 +46,25 @@ export function extractEnglish(scopeDir) {
         } else failures.push(`${pkg}: ${error.message}`);
       }
     });
+    }
   }
   if (failures.length) throw new Error(`Could not extract:\n${failures.join('\n')}`);
   if (!dictionaries.common || !dictionaries['settings.locale']) throw new Error('Core namespaces were not extracted');
   const version = JSON.parse(readFileSync(join(scopeDir, 'dsh-client-locale', 'package.json'), 'utf8')).version;
   return { version, packages: sortKeys(packages), dictionaries: sortKeys(dictionaries) };
+}
+
+/**
+ * Every script under a package's lib/ that calls `locale.register(`. Client code is
+ * not always in lib/client.js (the inspector registers from lib/client.page.js).
+ */
+function registeringFiles(dir) {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir, { recursive: true })
+    .map((name) => join(dir, name))
+    .filter((file) => /\.[cm]?js$/.test(file) && statSync(file).isFile())
+    .filter((file) => readFileSync(file, 'utf8').includes('locale.register('))
+    .sort();
 }
 
 export function sortKeys(object) {

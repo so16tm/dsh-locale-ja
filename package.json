@@ -1,6 +1,6 @@
 {
   "name": "@so16tm/dsh-locale-ja",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Japanese (日本語) UI language pack for DeepSeek Harness, built only on the public locale API.",
   "type": "module",
   "license": "MIT",
