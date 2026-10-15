@@ -7,6 +7,7 @@ import vm from 'node:vm';
 import { Context } from '@deepseek-ai/cordis';
 import { SystemPrompt, renderPrompt } from '@deepseek-ai/dsh-system-prompt';
 import { build } from 'esbuild';
+import semver from 'semver';
 
 const require = createRequire(import.meta.url);
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
@@ -38,6 +39,15 @@ const RUNTIMES = {
 };
 const runtimeVersion = (name) =>
   JSON.parse(readFileSync(require.resolve(`${RUNTIMES[name].split('/client')[0]}/package.json`), 'utf8')).version;
+
+// npm and pnpm resolve peers without includePrerelease: a prerelease only matches a clause
+// with the same major.minor.patch, so every prerelease line DSH ships needs its own clause.
+test('package managers accept the tested DSH versions under the peer range', () => {
+  const range = pkg.peerDependencies['@deepseek-ai/dsh-client-locale'];
+  for (const name of Object.keys(RUNTIMES)) {
+    assert.ok(semver.satisfies(runtimeVersion(name), range), `${runtimeVersion(name)} satisfies ${range}`);
+  }
+});
 
 /** The real shipped LocaleRuntime, with React-side dependencies stubbed out. */
 function runtime(name) {
