@@ -1,6 +1,6 @@
 {
   "name": "@so16tm/dsh-locale-ja",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Japanese (日本語) UI language pack for DeepSeek Harness, built only on the public locale API.",
   "type": "module",
   "license": "MIT",
@@ -63,7 +63,7 @@
     }
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh-client-locale": ">=0.2.0-rc.2 <0.3.0-0"
+    "@deepseek-ai/dsh-client-locale": ">=0.2.0-rc.2 <0.3.0-0 || >=0.2.1-0 <0.2.2-0"
   },
   "peerDependenciesMeta": {
     "@deepseek-ai/dsh-client-locale": {
@@ -78,6 +78,7 @@
     "@types/node": "24.13.4",
     "dsh-client-locale-oldest": "npm:@deepseek-ai/dsh-client-locale@0.2.0-rc.2",
     "esbuild": "0.28.2",
+    "semver": "7.8.5",
     "typescript": "5.9.3"
   },
   "scripts": {

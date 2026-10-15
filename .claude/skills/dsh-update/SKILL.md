@@ -65,7 +65,7 @@ pnpm coverage --strict
 pnpm add -D --save-exact @deepseek-ai/dsh-client-locale@<版>
 ```
 
-- `peerDependencies["@deepseek-ai/dsh-client-locale"]` は範囲で書く（例：`>=0.2.0-rc.2 <0.3.0-0`）。DSH は prerelease も含めてこの範囲で判定し、範囲外の版ではプラグインを起動時に読み込まない。新しい版が範囲内なら peer は変えない。次のマイナー版（`0.3.x`）に追従するときは上限を上げる。古い版の対応をやめるときは下限を上げ、`--drop-older` で sync する。
+- `peerDependencies["@deepseek-ai/dsh-client-locale"]` は範囲で書く（例：`>=0.2.0-rc.2 <0.3.0-0`）。DSH は prerelease も含めてこの範囲で判定し、範囲外の版ではプラグインを起動時に読み込まない。新しい版が範囲内なら peer は変えない。ただし新しい版が prerelease で、その `major.minor.patch`（例：`0.2.2-alpha.1` なら `0.2.2`）の条件がまだなければ `|| >=0.2.2-0 <0.2.3-0` を足す。npm・pnpm は prerelease を含めずに判定するため、足さないと npm で peer の衝突になる（テストが検出する）。次のマイナー版（`0.3.x`）に追従するときは上限を上げる。古い版の対応をやめるときは下限を上げ、`--drop-older` で sync する。
 - テスト用の `dsh-client-locale-oldest`（npm エイリアス）は peer の下限の版にする。下限を上げたら `pnpm add -D dsh-client-locale-oldest@npm:@deepseek-ai/dsh-client-locale@<下限>` で揃える。
 - 版を上げる。`package.json` の `version` のマイナー版を上げ（`0.1.0` → `0.2.0`）、`CHANGELOG.md` の先頭に `## v<新しい版>` の節を追加する。節には `対応 DSH:` の行と主な変更点を書く。
 - 対応 DSH・検証した版・翻訳件数など版ごとの情報は `CHANGELOG.md` の該当節に記録する。CI がその節をタグに対応する GitHub リリースの説明に使う。README に具体的な版番号や対応表を重複させない。使い方が変わる場合だけ `README.md` と `README.ja.md` を更新する。
