@@ -1,21 +1,78 @@
 {
   "versions": [
-    "0.2.0-rc.2"
+    "0.2.0-rc.2",
+    "0.2.1-alpha.2"
   ],
   "dictionaries": {
+    "chat": {
+      "message.accountStopped": [
+        "Task stopped"
+      ]
+    },
     "conversation": {
       "tool.preparing.content": [
         "Preparing content {kilobytes}KB"
       ]
     },
     "pluginManager": {
+      "bundlesTitle": [
+        "Installed"
+      ],
+      "installDoneRestart": [
+        "Installed; it loads at the next start."
+      ],
       "installUpgradeNotice": [
         "Installed plugins do not update automatically yet. To upgrade a plugin, uninstall it and install the new version. Later releases will keep improving the upgrade experience."
+      ],
+      "officialTitle": [
+        "Official"
+      ],
+      "reasonIncompatibleVersion": [
+        "{plugin} is incompatible with DSH {runtime} (requires {peers}); running it may cause crashes or data loss."
+      ],
+      "restartNotice": [
+        "The change takes effect at the next start"
       ]
     },
     "schedule.manager": {
       "detail.records": [
         "Delivery records"
+      ]
+    },
+    "settings.agentPreset": {
+      "guideMinimalExplanation": [
+        "### What is included\n\nOne persistent shell tool and a fixed system prompt. The built-in preset does not load Skills, planning, context compaction, or the standard runtime context.\n\n### When to choose it\n\nUse it as a baseline for experiments and comparisons. It can still read files and execute scripts through shell commands, but offers fewer built-in ways to manage a long task. Fewer tools does not necessarily make it easier for a beginner."
+      ],
+      "presetMinimalDescription": [
+        "The agent works using only a terminal tool. Useful for testing and comparing its basic performance."
+      ]
+    },
+    "settings.models": {
+      "baseUrlDefault": [
+        "Provider default"
+      ],
+      "deepSeekBaseUrl": [
+        "https://api.deepseek.com/anthropic"
+      ],
+      "keyEnvLocked": [
+        "Provided by the launch environment (read-only)"
+      ],
+      "keyPlaceholderNative": [
+        "Enter an API key, or leave blank to use environment authentication"
+      ],
+      "keyStored": [
+        "Configured — enter a new value to replace"
+      ]
+    },
+    "settings.pluginInventory": {
+      "countUnit": [
+        "plugins"
+      ],
+      "failedCountLabel": [
+        "failed"
+      ],
+      "viewInPreset": [
+        "View in the preset group"
       ]
     },
     "settings.theme": {
@@ -30,6 +87,17 @@
       ],
       "fontSize.title": [
         "Font size"
+      ]
+    },
+    "settings.webSearch": {
+      "baseUrl": [
+        "Endpoint"
+      ],
+      "baseUrlHint": [
+        "Leave blank to use the provider default."
+      ],
+      "maxUsesHint": [
+        "How many times one request may search before it must answer."
       ]
     },
     "trajectory": {
