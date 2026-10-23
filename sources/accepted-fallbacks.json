@@ -1,5 +1,8 @@
 [
   "chat.message.stepProcess.sharedPrefix",
+  "pluginManager.installDoneRestart",
+  "pluginManager.reasonIncompatibleVersion",
+  "pluginManager.restartNotice",
   "pluginManager.sentenceSeparator",
   "schedule.catalog.cron.part.join",
   "schedule.manager.cron.part.join"
