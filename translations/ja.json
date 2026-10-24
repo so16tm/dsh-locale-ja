@@ -565,6 +565,8 @@
     "search.paths": "パス{shown}件",
     "search.paths.truncated": "全{total}件のパス中{shown}件を表示",
     "session.hierarchy": "セッション階層",
+    "session.moreViews": "その他の会話ビュー",
+    "session.moreViewsCurrent": "その他の会話ビュー · {name}",
     "settings.enter.description": "エージェント実行中のEnterキーと送信ボタンの動作です。Cmd/Ctrl+Enterはもう一方の動作になります。",
     "settings.enter.queue": "キューに追加",
     "settings.enter.steer": "割り込み送信",
@@ -852,6 +854,13 @@
     "code.copy": "コピー",
     "footnotes": "脚注",
     "viewer.label": "Markdown"
+  },
+  "entryCustomization": {
+    "create": "プラグインを作成",
+    "createPrompt.conversation": "DSHの会話ビュープラグインを作成してください。",
+    "createPrompt.rightbar": "右サイドバーにエントリーを持つDSHプラグインを作成してください。",
+    "createPrompt.sidebar": "左サイドバーにエントリーを持つDSHプラグインを作成してください。",
+    "install": "他のプラグインを探す"
   },
   "feedback": {
     "action.dislike": "良くない回答",
@@ -2317,6 +2326,7 @@
   },
   "sidebar": {
     "panels.label": "グローバルパネル",
+    "panels.more": "その他",
     "session.new": "新規セッション",
     "session.new.label": "新規セッションを作成",
     "toggle.collapse": "サイドバーを折りたたむ",
@@ -2495,6 +2505,7 @@
     "dock.splitPane": "分割",
     "dock.splitPaneDisabled": "ペインは2つまでです。",
     "dock.splitPaneNarrow": "分割するには幅が足りません。サイドバーを広げてください。",
+    "tab.guide.more": "その他のツール",
     "tab.guide.title": "スタート",
     "tab.unavailable": "この種類のコンテンツを表示できるビューはまだありません。"
   },
