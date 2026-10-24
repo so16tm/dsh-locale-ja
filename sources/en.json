@@ -1,5 +1,5 @@
 {
-  "version": "0.2.1-rc.2",
+  "version": "0.2.1-rc.3",
   "packages": {
     "agent-team": "dsh-experimental-client-ui-agent-team",
     "approval": "dsh-client-ui-approval",
@@ -14,6 +14,7 @@
     "directory-browser": "dsh-client-ui-directory-picker-browse",
     "documentHtml": "dsh-client-ui-sidebar-documentpreview",
     "documentMarkdown": "dsh-client-ui-sidebar-documentpreview",
+    "entryCustomization": "dsh-client-ui-entry-customization",
     "feedback": "dsh-client-ui-message-feedback",
     "goal": "dsh-client-ui-goal",
     "inspectorPanel": "dsh-experimental-inspector",
@@ -633,6 +634,8 @@
       "search.paths": "{shown} paths",
       "search.paths.truncated": "Showing {shown} of {total} paths",
       "session.hierarchy": "Session hierarchy",
+      "session.moreViews": "More conversation views",
+      "session.moreViewsCurrent": "More conversation views · {name}",
       "settings.enter.description": "What Enter and the Send button do while the agent is running; Cmd/Ctrl+Enter uses the other behavior",
       "settings.enter.queue": "Queue",
       "settings.enter.steer": "Steer",
@@ -920,6 +923,13 @@
       "code.copy": "Copy",
       "footnotes": "Footnotes",
       "viewer.label": "Markdown"
+    },
+    "entryCustomization": {
+      "create": "Create your plugin",
+      "createPrompt.conversation": "Create a DSH conversation view plugin.",
+      "createPrompt.rightbar": "Create a DSH plugin with a right sidebar entry.",
+      "createPrompt.sidebar": "Create a DSH plugin with a left sidebar entry.",
+      "install": "Browse other plugins"
     },
     "feedback": {
       "action.dislike": "Bad response",
@@ -2380,6 +2390,7 @@
     },
     "sidebar": {
       "panels.label": "Global panels",
+      "panels.more": "More",
       "session.new": "New Session",
       "session.new.label": "New session",
       "toggle.collapse": "Collapse sidebar",
@@ -2558,6 +2569,7 @@
       "dock.splitPane": "Split",
       "dock.splitPaneDisabled": "Two panes is the limit",
       "dock.splitPaneNarrow": "Not enough width to split, widen the sidebar",
+      "tab.guide.more": "More tools",
       "tab.guide.title": "Start",
       "tab.unavailable": "Nothing here can view this kind of content yet."
     },
