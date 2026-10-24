@@ -11,6 +11,7 @@
 5. **フォントは日本語選択中だけ、利用者の設定を優先**：`:root` で本体の既定の書体スタック（`--dsh-font-family-text-default` / `--dsh-font-family-code-default`、0.2.0 では `--dsw-font-family` / `--ds-font-family-code`）だけを置き換える。Settings で利用者が選んだフォント（body の `--dsh-font-family-text` など）は常にその前に並ぶ。他の言語に切り替えたら取り除く。Web フォントは取得しない。
 6. **訳はデータ、コードは英語**：日本語は `translations/ja.json`（名前空間 → キー → 訳）にだけ置く。`locale/*.json` はこのプラグイン自身の表示名・説明で、DSH が `resolveText()` で読む別物。
 7. **peer は範囲で書く**：`peerDependencies` の `@deepseek-ai/dsh-client-locale` は、検証した最も古い版から次のマイナー版の手前まで（例：`>=0.2.0-rc.2 <0.3.0-0`）とする。DSH は起動時に prerelease も含めてこの範囲で互換性を判定し、外れたプラグインを読み込まないため、本体の更新のたびに日本語が消えないようにする。範囲内でも未検証の版には訳のない文字列（英語表示）があり得る。テストは範囲の最も新しい版と最も古い版の `LocaleRuntime` で回す。
+   npm・pnpm は prerelease を含めずに peer を判定し、prerelease は同じ `major.minor.patch` を持つ条件にしか合わない。DSH が出す prerelease の系列（例：`0.2.1-alpha.*`）ごとに `|| >=0.2.1-0 <0.2.2-0` の形で条件を足す。足さないと、その版の DSH と一緒に npm で入れたときに peer の衝突（ERESOLVE）になる。
    原文は最新の対応版から取る。それより前の対応版で、英語がない・違うキーは `sources/older.json` に英語つきで記録し、訳はすべての版の英語に合う言い回しにする（置換の名前は全版で検査する）。
 8. **版はタグで公開**：利用者はタグ（`v` + `package.json` の `version`）を指定して入れる。タグは CI がマージ時に作り、付け直しも削除もしない。版ごとの対応 DSH・検証結果・変更点は `CHANGELOG.md` に残し、CI が該当節を GitHub リリースの説明に使う。README はリリースへのリンクと固定の利用手順を載せ、具体的な版番号や対応表を重複させない。
 
