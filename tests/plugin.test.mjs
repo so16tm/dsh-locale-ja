@@ -113,31 +113,36 @@ for (const name of Object.keys(RUNTIMES)) {
     dispose();
   });
 
-  // DSH builds after 0.2.1-rc.3 ship their own `ja` language and `ja` dictionaries for the
-  // `common` and `settings.locale` namespaces. Both registrations throw when occupied.
-  test(`DSH ${runtimeVersion(name)}: activation succeeds when DSH already ships Japanese`, async () => {
+  // DSH builds after 0.2.1-rc.3 define the `ja` language before providing the locale service,
+  // and every DSH package registers its own `ja` dictionary when it activates, including
+  // packages that load after this pack. A slot taken here would make that package fail.
+  test(`DSH ${runtimeVersion(name)}: when DSH already ships Japanese, this pack registers no dictionaries`, async () => {
     const ctx = new Context();
     const locale = runtime(name);
     const builtIn = [
       locale.addLanguage({ id: 'ja', label: '日本語', fallback: 'en' }),
       locale.register('common', 'ja', { cancel: '内蔵のキャンセル' }),
-      locale.register('settings.locale', 'ja', { 'language.title': '内蔵の言語' }),
     ];
     ctx.provide('locale', locale);
     const fork = ctx.plugin(plugin.exports);
     await fork;
     assert.equal(locale.getLocale().locales.filter((v) => v.id === 'ja').length, 1);
+
+    // Packages that activate after this pack, and ones nobody has loaded yet, still register.
+    builtIn.push(
+      locale.register('settings.locale', 'ja', { 'language.title': '内蔵の言語' }),
+      locale.register('pluginManager', 'ja', { addPlugin: '内蔵の追加' }),
+      locale.register('voice-input', 'ja', { start: '内蔵の開始' }),
+    );
     locale.setLocale('ja');
-    // Occupied namespaces keep DSH's own text; the rest come from this pack.
     assert.equal(locale.bind('common')('cancel'), '内蔵のキャンセル');
     assert.equal(locale.bind('settings.locale')('language.title'), '内蔵の言語');
-    assert.equal(locale.bind('pluginManager')('addPlugin'), translations.pluginManager.addPlugin);
+    assert.equal(locale.bind('pluginManager')('addPlugin'), '内蔵の追加');
 
     await fork.dispose();
     // Disposing the pack must not take DSH's own registrations with it.
     assert.ok(locale.getLocale().locales.some((v) => v.id === 'ja'));
     assert.equal(locale.bind('common')('cancel'), '内蔵のキャンセル');
-    assert.equal(locale.bind('pluginManager')('addPlugin'), english.pluginManager.addPlugin);
     for (const release of builtIn) release();
   });
 
@@ -154,7 +159,7 @@ for (const name of Object.keys(RUNTIMES)) {
     locale.register('transient', 'ja', { key: '再登録' })();
   });
 
-  test(`DSH ${runtimeVersion(name)}: a namespace DSH already owns is left to it`, () => {
+  test(`DSH ${runtimeVersion(name)}: a namespace someone else already holds is left to its owner`, () => {
     const locale = runtime(name);
     const existing = locale.register('collision', 'ja', { owned: '既存' });
     const dispose = registerJapanese(locale, { transient: { key: '一時' }, collision: { key: '競合' } });

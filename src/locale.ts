@@ -15,11 +15,15 @@ function hasLanguage(locale: Pick<LocaleService, 'getLocale'>): boolean {
  * A failure unwinds what was already registered; the returned disposer
  * releases everything in reverse order and is safe to call twice.
  *
- * DSH builds after 0.2.1-rc.3 ship their own Japanese language and the `ja` dictionaries
- * for a few namespaces. A namespace or language already held by DSH is left to its owner:
- * registering over it throws, which would keep this plugin from activating at all.
+ * DSH builds after 0.2.1-rc.3 ship their own Japanese: the `ja` language is defined before
+ * the locale service is provided, and each DSH package registers its own `ja` dictionary
+ * as it activates, including packages loaded later. Registering a (namespace, `ja`) slot
+ * that a package claims afterwards makes that package fail to activate, and no ordering
+ * of this pack can rule that out. So when the language already exists, DSH owns Japanese
+ * and nothing is registered here.
  */
 export function registerJapanese(locale: LocaleService, dictionaries: Dictionaries): () => void {
+  if (hasLanguage(locale)) return () => {};
   const disposers: (() => void)[] = [];
   let disposed = false;
   const dispose = (): void => {
@@ -38,10 +42,11 @@ export function registerJapanese(locale: LocaleService, dictionaries: Dictionari
         disposers.push(locale.register(namespace, JAPANESE, filled));
       } catch {
         // `ja` is a valid tag, so the only way to fail is an occupied (namespace, ja) slot.
+        // The slot is left to its owner.
       }
     }
     // Add the language last so a saved `ja` preference activates complete dictionaries.
-    if (!hasLanguage(locale)) disposers.push(locale.addLanguage({ id: JAPANESE, label: '日本語', fallback: 'en' }));
+    disposers.push(locale.addLanguage({ id: JAPANESE, label: '日本語', fallback: 'en' }));
     return dispose;
   } catch (error) {
     dispose();
