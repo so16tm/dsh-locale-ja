@@ -5,7 +5,7 @@
 ## 守ること
 
 1. **公開 API のみ**：`locale.register(ns, 'ja', dict)` と `locale.addLanguage({ id: 'ja', label: '日本語', fallback: 'en' })` だけを使う。`setLocale` のラップや内部フィールドの操作、独自の保存領域は持たない。言語の選択は本体の Host 設定が保存する。
-2. **登録順と後始末**：辞書を先に、言語を最後に登録する（保存済みの `ja` が不完全な辞書で有効化されないように）。途中で失敗したら巻き戻し、停止時は逆順にすべて解除する。副作用はすべて `ctx.effect` が所有する。
+2. **登録順と後始末**：辞書を先に、言語を最後に登録する（保存済みの `ja` が不完全な辞書で有効化されないように）。途中で失敗したら巻き戻し、停止時は逆順にすべて解除する。DSH が日本語（言語 `ja` や、`common` などの `ja` 辞書）を標準で持つ版では、登録すると衝突で例外になりプラグインが起動できないため、DSH がすでに持つ名前空間と言語は DSH に任せ、空いている名前空間だけを登録する。副作用はすべて `ctx.effect` が所有する。
 3. **ブラウザー側バンドルは自己完結**：`lib/client.js` は DSH の ModuleLoader 形式で、`require()` を含まない。`@deepseek-ai/*` は型と開発用依存のみ。ビルドが検査する。
 4. **Host 側は応答言語だけ**：`src/index.ts` は Loader 行のマウント先で、`systemPrompt` があるときに限り、UI で選んだ言語で応答させる指示を `systemPrompt.section()`（公開 API）で1つ足す。既定のプロンプトには応答言語の指定がなく、ツール出力などに引きずられて英語や中国語に切り替わるため。言語は `settings.describe()` の `locale` 項目（`dsh-client-locale` が保存する `preference`）からプロンプト組み立てのたびに読む。指示を足すのは日本語が明示的に選ばれているときだけで、他の言語や未選択（ブラウザー任せ）のときは何も足さず、本体の既定の振る舞いに任せる。設定 `replyInUiLanguage: false` で無効にできる。
 5. **フォントは日本語選択中だけ、利用者の設定を優先**：`:root` で本体の既定の書体スタック（`--dsh-font-family-text-default` / `--dsh-font-family-code-default`、0.2.0 では `--dsw-font-family` / `--ds-font-family-code`）だけを置き換える。Settings で利用者が選んだフォント（body の `--dsh-font-family-text` など）は常にその前に並ぶ。他の言語に切り替えたら取り除く。Web フォントは取得しない。
